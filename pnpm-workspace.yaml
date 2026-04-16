@@ -3,21 +3,34 @@ packages:
   - packages/*
   - tools/*
 
+catalog:
+  # Vite+ ecosystem
+  "@cloudflare/workers-types": ^4.20260416.2
+  "@hono/zod-validator": ^0.7.6
+  "@libsql/client": ^0.17.2
+  "@types/node": "latest"
+  better-auth: ^1.6.4
+  drizzle-kit: ^0.31.10
+  drizzle-orm: ^0.45.2
+  hono: ^4.12.14
+  jose: ^6.2.2
+  nanoid: ^5.1.9
+  typescript: "^6.0.2"
+  uuidv7: ^1.2.1
+  vite: npm:@voidzero-dev/vite-plus-core@latest
+  vite-plus: latest
+  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  wrangler: ^4.83.0
+  zod: ^4.3.6
+
 catalogMode: prefer
 
-catalog:
-  "@types/node": ^24
-  typescript: ^5
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
-  vite-plus: latest
-overrides:
-  vite: "catalog:"
-  vitest: "catalog:"
 peerDependencyRules:
   allowAny:
     - vite
     - vitest
+    - zod
   allowedVersions:
     vite: "*"
     vitest: "*"
+    zod: "*"

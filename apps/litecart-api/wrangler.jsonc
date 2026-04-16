@@ -1,0 +1,82 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "litecart-api",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-04-16",
+  "compatibility_flags": ["nodejs_compat_v2"],
+  "account_id": "7bb15c73ac4a3c61c923086ef33a567e",
+  // D1 Database binding (global - for auth and store metadata)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "litecart-db",
+      "database_id": "c9a34f67-8d2a-44f7-8ce7-ef1369faad67",
+      "migrations_dir": "./drizzle/migrations",
+    },
+  ],
+  // Durable Objects (per-store isolated SQLite databases)
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "STORE_DO",
+        "class_name": "StoreDurableObject",
+        "script_name": "litecart-api",
+      },
+    ],
+  },
+  // Durable Object migrations
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["StoreDurableObject"],
+    },
+  ],
+  // R2 bucket for product images
+  "r2_buckets": [
+    {
+      "binding": "IMAGES",
+      "bucket_name": "litecart-images",
+    },
+  ],
+  // Queue bindings
+  "queues": {
+    "producers": [
+      {
+        "binding": "ORDER_QUEUE",
+        "queue": "order-queue",
+      },
+      {
+        "binding": "EMAIL_QUEUE",
+        "queue": "email-queue",
+      },
+      {
+        "binding": "WEBHOOK_QUEUE",
+        "queue": "webhook-queue",
+      },
+      {
+        "binding": "INVENTORY_QUEUE",
+        "queue": "inventory-queue",
+      },
+    ],
+  },
+  // Environment variables
+  "vars": {
+    "BETTER_AUTH_SECRET": "", // Set via wrangler secret or .dev.vars
+    "BETTER_AUTH_URL": "http://localhost:8787",
+  },
+  // Development vars file (for local dev)
+  // Create .dev.vars with secrets like:
+  // BETTER_AUTH_SECRET=your-32-char-secret
+  // EMAIL_API_KEY=xxx
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1,
+  },
+  "rules": [
+    {
+      "type": "Text",
+      "globs": ["**/*.sql"],
+      "fallthrough": true,
+    },
+  ],
+}
