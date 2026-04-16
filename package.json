@@ -1,0 +1,19 @@
+{
+  "name": "litecart",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vp run litecart-admin#build && vp run litecart-store#build && vp run litecart-core#build && vp run utils#build",
+    "test": "vp run utils#test",
+    "ready": "vp fmt && vp lint && vp run test && vp run build",
+    "prepare": "vp config"
+  },
+  "devDependencies": {
+    "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@10.33.0"
+}
