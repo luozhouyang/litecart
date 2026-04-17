@@ -1,0 +1,34 @@
+{
+  "name": "@litecart/client",
+  "version": "0.0.0",
+  "description": "HTTP client SDK for Litecart API",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "dev": "vp pack --watch",
+    "check": "vp check"
+  },
+  "dependencies": {
+    "@litecart/types": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^25.5.0",
+    "typescript": "^6.0.2",
+    "vite-plus": "^0.1.14",
+    "zod": "catalog:"
+  }
+}

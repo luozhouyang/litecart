@@ -7,7 +7,7 @@
 
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { z } from "zod";
+import { createStoreSchema, updateStoreSchema } from "@litecart/types";
 import { StoreService } from "../../services/store-service";
 import { createDb } from "../../db";
 import { adminStoreMiddleware, optionalStoreMiddleware } from "../../middleware";
@@ -17,31 +17,6 @@ const app = new Hono<{
   Bindings: CloudflareBindings;
   Variables: HonoVariables;
 }>();
-
-// Validation schemas
-const createStoreSchema = z.object({
-  name: z.string().min(1).max(100),
-  slug: z
-    .string()
-    .min(3)
-    .max(50)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens"),
-  currencyCode: z.string().default("USD"),
-  timezone: z.string().default("UTC"),
-});
-
-const updateStoreSchema = z.object({
-  name: z.string().min(1).max(100).optional(),
-  slug: z
-    .string()
-    .min(3)
-    .max(50)
-    .regex(/^[a-z0-9-]+$/, "Slug must be lowercase alphanumeric with hyphens")
-    .optional(),
-  currencyCode: z.string().optional(),
-  timezone: z.string().optional(),
-  status: z.enum(["active", "suspended", "draft"]).optional(),
-});
 
 // GET /api/admin/stores - List user's stores
 app.get("/", optionalStoreMiddleware, async (c) => {

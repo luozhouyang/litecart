@@ -7,11 +7,7 @@
 
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import {
-  productListQuerySchema,
-  createProductSchema,
-  updateProductSchema,
-} from "../../validators/product";
+import { productListQuerySchema, createProductSchema, updateProductSchema } from "@litecart/types";
 import { adminStoreMiddleware } from "../../middleware";
 import type { HonoVariables } from "../../types/bindings";
 

@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "vp run litecart-admin#build && vp run litecart-store#build && vp run litecart-api#build && vp run utils#build",
+    "build": "vp run types#build && vp run client#build && vp run litecart-admin#build && vp run litecart-store#build && vp run litecart-api#build && vp run utils#build",
     "test": "vp run utils#test",
     "ready": "vp fmt && vp lint && vp run test && vp run build",
     "prepare": "vp config"

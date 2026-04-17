@@ -77,6 +77,9 @@ importers:
       '@hono/zod-validator':
         specifier: 'catalog:'
         version: 0.7.6(hono@4.12.14)(zod@4.3.6)
+      '@litecart/types':
+        specifier: workspace:*
+        version: link:../../packages/types
       better-auth:
         specifier: 'catalog:'
         version: 1.6.4(@cloudflare/workers-types@4.20260416.2)(@opentelemetry/api@1.9.1)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@cloudflare/workers-types@4.20260416.2)(@libsql/client@0.17.2)(@opentelemetry/api@1.9.1)(kysely@0.28.16))
@@ -115,16 +118,6 @@ importers:
         specifier: 'catalog:'
         version: 4.83.0(@cloudflare/workers-types@4.20260416.2)
 
-  apps/litecart-core:
-    dependencies:
-      hono:
-        specifier: ^4.12.14
-        version: 4.12.14
-    devDependencies:
-      wrangler:
-        specifier: ^4.4.0
-        version: 4.83.0
-
   apps/litecart-store:
     devDependencies:
       typescript:
@@ -136,6 +129,40 @@ importers:
       vite-plus:
         specifier: 'catalog:'
         version: 0.1.18(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(@voidzero-dev/vite-plus-core@0.1.18(@types/node@25.6.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3))(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(yaml@2.8.3)
+
+  packages/client:
+    dependencies:
+      '@litecart/types':
+        specifier: workspace:*
+        version: link:../types
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.6.0
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.2
+      vite-plus:
+        specifier: ^0.1.14
+        version: 0.1.18(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.8(@types/node@25.6.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
+
+  packages/types:
+    devDependencies:
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.6.0
+      typescript:
+        specifier: ^6.0.2
+        version: 6.0.2
+      vite-plus:
+        specifier: ^0.1.14
+        version: 0.1.18(@opentelemetry/api@1.9.1)(@types/node@25.6.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(typescript@6.0.2)(vite@8.0.8(@types/node@25.6.0)(esbuild@0.27.3)(jiti@2.6.1)(tsx@4.21.0)(yaml@2.8.3))(yaml@2.8.3)
+      zod:
+        specifier: 'catalog:'
+        version: 4.3.6
 
   packages/utils:
     devDependencies:
@@ -3817,22 +3844,6 @@ snapshots:
       '@cloudflare/workerd-linux-64': 1.20260415.1
       '@cloudflare/workerd-linux-arm64': 1.20260415.1
       '@cloudflare/workerd-windows-64': 1.20260415.1
-
-  wrangler@4.83.0:
-    dependencies:
-      '@cloudflare/kv-asset-handler': 0.4.2
-      '@cloudflare/unenv-preset': 2.16.0(unenv@2.0.0-rc.24)(workerd@1.20260415.1)
-      blake3-wasm: 2.1.5
-      esbuild: 0.27.3
-      miniflare: 4.20260415.0
-      path-to-regexp: 6.3.0
-      unenv: 2.0.0-rc.24
-      workerd: 1.20260415.1
-    optionalDependencies:
-      fsevents: 2.3.3
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
 
   wrangler@4.83.0(@cloudflare/workers-types@4.20260416.2):
     dependencies:

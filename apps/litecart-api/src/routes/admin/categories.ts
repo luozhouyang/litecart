@@ -7,7 +7,7 @@
 
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { createCategorySchema, updateCategorySchema } from "../../validators/category";
+import { createCategorySchema, updateCategorySchema } from "@litecart/types";
 import { adminStoreMiddleware } from "../../middleware";
 import type { HonoVariables } from "../../types/bindings";
 

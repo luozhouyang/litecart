@@ -15,7 +15,7 @@ import {
   setShippingAddressSchema,
   selectShippingMethodSchema,
   completeCartSchema,
-} from "../../validators/cart";
+} from "@litecart/types";
 import { storefrontJwtMiddleware } from "../../middleware";
 import type { HonoVariables } from "../../types/bindings";
 

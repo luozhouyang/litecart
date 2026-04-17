@@ -12,7 +12,7 @@ import {
   updateOrderSchema,
   createFulfillmentSchema,
   createRefundSchema,
-} from "../../validators/order";
+} from "@litecart/types";
 import { adminStoreMiddleware } from "../../middleware";
 import type { HonoVariables } from "../../types/bindings";
 

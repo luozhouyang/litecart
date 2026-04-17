@@ -8,7 +8,7 @@
 
 import { Hono } from "hono";
 import { zValidator } from "@hono/zod-validator";
-import { productListQuerySchema } from "../../validators/product";
+import { productListQuerySchema } from "@litecart/types";
 import { storefrontJwtMiddleware } from "../../middleware";
 import type { HonoVariables } from "../../types/bindings";
 
