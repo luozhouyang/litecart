@@ -5,6 +5,8 @@
     "dev": "wrangler dev",
     "build": "wrangler build",
     "deploy": "wrangler deploy --minify",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
     "auth:generate": "pnpm dlx auth@latest generate --config better-auth.config.ts --output src/db/schema/auth.ts --yes",
     "db:generate": "drizzle-kit generate",
@@ -25,10 +27,12 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "catalog:",
     "@cloudflare/workers-types": "catalog:",
     "@libsql/client": "catalog:",
     "drizzle-kit": "catalog:",
     "typescript": "catalog:",
+    "vitest": "catalog:",
     "wrangler": "catalog:"
   }
 }

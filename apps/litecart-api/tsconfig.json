@@ -16,7 +16,7 @@
     "lib": ["ESNext"],
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
-    "types": ["./worker-configuration.d.ts"]
+    "types": ["./worker-configuration.d.ts", "@cloudflare/vitest-pool-workers"]
   },
   "include": ["src/**/*", "drizzle.config.ts", "worker-configuration.d.ts"],
   "exclude": ["node_modules", "dist"]
