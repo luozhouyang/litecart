@@ -1,6 +1,7 @@
 import type { Fetcher } from "../fetcher";
 import { AdminProductsClient } from "./products";
 import { AdminCategoriesClient } from "./categories";
+import { AdminCollectionsClient } from "./collections";
 import { AdminOrdersClient } from "./orders";
 import { AdminStoresClient } from "./stores";
 
@@ -20,6 +21,9 @@ export class AdminClient {
   /** Categories management */
   readonly categories: AdminCategoriesClient;
 
+  /** Collections management */
+  readonly collections: AdminCollectionsClient;
+
   /** Orders management */
   readonly orders: AdminOrdersClient;
 
@@ -32,6 +36,7 @@ export class AdminClient {
 
     this.products = new AdminProductsClient(this.fetcher, this.token, "admin");
     this.categories = new AdminCategoriesClient(this.fetcher, this.token, "admin");
+    this.collections = new AdminCollectionsClient(this.fetcher, this.token, "admin");
     this.orders = new AdminOrdersClient(this.fetcher, this.token, "admin");
     this.stores = new AdminStoresClient(this.fetcher, this.token, "admin");
   }
@@ -43,6 +48,7 @@ export class AdminClient {
     this.token = token;
     this.products.setToken(token);
     this.categories.setToken(token);
+    this.collections.setToken(token);
     this.orders.setToken(token);
     this.stores.setToken(token);
   }

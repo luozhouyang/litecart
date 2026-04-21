@@ -13,6 +13,7 @@ import { StoreDurableObject } from "./durable-objects";
 // Import routes
 import productsAdminRoutes from "./routes/admin/products";
 import categoriesAdminRoutes from "./routes/admin/categories";
+import collectionsAdminRoutes from "./routes/admin/collections";
 import ordersAdminRoutes from "./routes/admin/orders";
 import storesAdminRoutes from "./routes/admin/stores";
 import productsStoreRoutes from "./routes/store/products";
@@ -70,6 +71,7 @@ app.get("/", (c) => {
 app.route("/api/admin/stores", storesAdminRoutes);
 app.route("/api/admin/products", productsAdminRoutes);
 app.route("/api/admin/categories", categoriesAdminRoutes);
+app.route("/api/admin/collections", collectionsAdminRoutes);
 app.route("/api/admin/orders", ordersAdminRoutes);
 
 // Mount Store routes

@@ -22,6 +22,18 @@ export interface CategoryEntity {
   deletedAt: Date | null;
 }
 
+// Collection
+export interface CollectionEntity {
+  id: string;
+  title: string;
+  handle: string;
+  description: string | null;
+  metadata: string | null;
+  createdAt: Date | null;
+  updatedAt: Date | null;
+  deletedAt: Date | null;
+}
+
 // Product (base entity)
 export interface ProductEntity {
   id: string;
