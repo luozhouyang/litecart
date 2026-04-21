@@ -9,12 +9,16 @@ catalog:
   "@cloudflare/workers-types": ^4.20260416.2
   "@hono/zod-validator": ^0.7.6
   "@libsql/client": ^0.17.2
+  "@testing-library/jest-dom": ^6.9.1
+  "@testing-library/react": ^16.3.2
   "@types/node": "latest"
   better-auth: ^1.6.4
   drizzle-kit: ^0.31.10
   drizzle-orm: ^0.45.2
+  happy-dom: ^20.9.0
   hono: ^4.12.14
   jose: ^6.2.2
+  jsdom: ^29.0.2
   nanoid: ^5.1.9
   typescript: "^6.0.2"
   uuidv7: ^1.2.1
