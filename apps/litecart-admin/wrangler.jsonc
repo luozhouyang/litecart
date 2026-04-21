@@ -1,0 +1,19 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "litecart-admin",
+  "compatibility_date": "2026-04-21",
+  "main": "./dist/index.html",
+  "build": {
+    "command": "vp build",
+    "watch_dir": "./src",
+  },
+  "assets": {
+    "not_found_handling": "single-page-application",
+  },
+  "routes": [
+    {
+      "pattern": "/litecart-admin/*",
+      "custom_domain": false,
+    },
+  ],
+}

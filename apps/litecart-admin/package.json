@@ -5,12 +5,47 @@
   "type": "module",
   "scripts": {
     "dev": "vp dev",
-    "build": "tsc && vp build",
+    "build": "vp build",
     "preview": "vp preview"
   },
+  "dependencies": {
+    "@litecart/client": "workspace:*",
+    "@litecart/types": "workspace:*",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-dialog": "^1.1.0",
+    "@radix-ui/react-dropdown-menu": "^2.1.0",
+    "@radix-ui/react-label": "^2.1.0",
+    "@radix-ui/react-popover": "^1.1.0",
+    "@radix-ui/react-select": "^2.2.0",
+    "@radix-ui/react-separator": "^1.1.0",
+    "@radix-ui/react-slot": "^1.2.0",
+    "@radix-ui/react-tabs": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.2.0",
+    "@tanstack/react-query": "^5.70.0",
+    "@tanstack/react-router": "^1.100.0",
+    "@testing-library/jest-dom": "catalog:",
+    "@testing-library/react": "catalog:",
+    "better-auth": "catalog:",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.0",
+    "happy-dom": "catalog:",
+    "jsdom": "catalog:",
+    "lucide-react": "^0.500.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "tailwind-merge": "^2.5.0",
+    "zod": "catalog:"
+  },
   "devDependencies": {
-    "typescript": "~6.0.2",
+    "@tailwindcss/vite": "^4.0.0",
+    "@tanstack/router-vite-plugin": "^1.100.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.4.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "catalog:",
     "vite": "catalog:",
-    "vite-plus": "catalog:"
+    "vite-plus": "catalog:",
+    "wrangler": "catalog:"
   }
 }
