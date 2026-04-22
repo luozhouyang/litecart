@@ -7,7 +7,10 @@
     "dev": "vp dev",
     "build": "vp build",
     "preview": "vp preview",
-    "test": "vp test"
+    "test": "vp test",
+    "test:unit": "vp test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@litecart/client": "workspace:*",
@@ -25,6 +28,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.0",
     "@tailwindcss/vite": "^4.0.0",
     "@tanstack/router-vite-plugin": "^1.100.0",
     "@testing-library/jest-dom": "catalog:",

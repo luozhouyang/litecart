@@ -10,12 +10,12 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "happy-dom",
-    setupFiles: ["./src/test/setup.ts"],
-    include: ["src/**/*.{test,spec}.{ts,tsx}"],
+    setupFiles: ["./tests/setup/unit-setup.ts"],
+    include: ["tests/unit/**/*.{test,spec}.{ts,tsx}"],
     coverage: {
       reporter: ["text", "json", "html"],
       include: ["src/lib/**", "src/hooks/**", "src/components/**"],
-      exclude: ["src/**/*.d.ts", "src/test/**", "src/routeTree.gen.ts"],
+      exclude: ["src/**/*.d.ts", "src/routeTree.gen.ts"],
     },
   },
   resolve: {
