@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+/* Tailwind 4 CSS-based theme configuration - Colorful & Vibrant E-commerce Theme */
+@theme {
+  /* Base colors */
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(240 10% 3.9%);
+
+  /* Card with subtle gradient feel */
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(240 10% 3.9%);
+
+  /* Popover */
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(240 10% 3.9%);
+
+  /* Primary - Vibrant purple gradient */
+  --color-primary: hsl(250 95% 67%);
+  --color-primary-foreground: hsl(0 0% 100%);
+
+  /* Secondary */
+  --color-secondary: hsl(250 4.8% 95.9%);
+  --color-secondary-foreground: hsl(240 5.9% 10%);
+
+  /* Muted */
+  --color-muted: hsl(250 4.8% 95.9%);
+  --color-muted-foreground: hsl(240 3.8% 46.1%);
+
+  /* Accent */
+  --color-accent: hsl(280 65% 60%);
+  --color-accent-foreground: hsl(0 0% 100%);
+
+  /* Destructive */
+  --color-destructive: hsl(0 84.2% 60.2%);
+  --color-destructive-foreground: hsl(0 0% 98%);
+
+  /* Success - for confirmations */
+  --color-success: hsl(142 76% 36%);
+  --color-success-foreground: hsl(0 0% 100%);
+
+  /* Warning - for alerts */
+  --color-warning: hsl(38 92% 50%);
+  --color-warning-foreground: hsl(0 0% 10%);
+
+  /* Sale/Promo - Bright pink for discounts */
+  --color-sale: hsl(340 82% 52%);
+  --color-sale-foreground: hsl(0 0% 100%);
+
+  /* Border and input */
+  --color-border: hsl(250 5.9% 90%);
+  --color-input: hsl(250 5.9% 90%);
+  --color-ring: hsl(250 95% 67%);
+
+  /* Rounded corners - more rounded for e-commerce feel */
+  --radius: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    /* Smooth scrolling for better UX */
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom gradient utilities */
+@layer utilities {
+  .gradient-primary {
+    background: linear-gradient(135deg, hsl(250 95% 67%) 0%, hsl(280 65% 60%) 100%);
+  }
+
+  .gradient-primary-hover:hover {
+    background: linear-gradient(135deg, hsl(250 95% 60%) 0%, hsl(280 65% 55%) 100%);
+  }
+
+  .gradient-card-border {
+    border-image: linear-gradient(135deg, hsl(250 95% 67%), hsl(280 65% 60%)) 1;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(250 95% 67%) 0%, hsl(280 65% 60%) 100%);
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Touch-friendly sizes for mobile e-commerce */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Bottom sticky button for mobile checkout */
+  .sticky-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 1rem;
+    background: var(--color-background);
+    border-top: 1px solid var(--color-border);
+    z-index: 40;
+  }
+}
