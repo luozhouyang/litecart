@@ -19,6 +19,7 @@ import storesAdminRoutes from "./routes/admin/stores";
 import productsStoreRoutes from "./routes/store/products";
 import categoriesStoreRoutes from "./routes/store/categories";
 import cartStoreRoutes from "./routes/store/cart";
+import paymentWebhookRoutes from "./routes/store/payment-webhook";
 
 // Create Hono app with typed bindings and variables
 const app = new Hono<{
@@ -78,6 +79,8 @@ app.route("/api/admin/orders", ordersAdminRoutes);
 app.route("/api/store/products", productsStoreRoutes);
 app.route("/api/store/categories", categoriesStoreRoutes);
 app.route("/api/store/cart", cartStoreRoutes);
+// Webhook routes (no JWT middleware - publicly accessible by payment providers)
+app.route("/api/store/payment", paymentWebhookRoutes);
 
 // 404 handler
 app.notFound((c) => {

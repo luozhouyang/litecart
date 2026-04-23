@@ -25,7 +25,16 @@ export {
   useUpdateCollection,
   useDeleteCollection,
 } from "./useCollections";
-export { useOrders, useOrder, useUpdateOrder, useFulfillOrder, useRefundOrder } from "./useOrders";
+export {
+  useOrders,
+  useOrder,
+  useUpdateOrder,
+  useFulfillOrder,
+  useRefundOrder,
+  useOrderFulfillments,
+  useMarkFulfillmentShipped,
+  useMarkFulfillmentDelivered,
+} from "./useOrders";
 export {
   useStores,
   useStoreById,

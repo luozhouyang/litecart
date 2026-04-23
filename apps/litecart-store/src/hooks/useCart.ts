@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getApiClient } from "@/lib/api";
 import { useStoreContext } from "@/lib/store-context";
-import type { CompleteCartRequest } from "@litecart/types";
+import type { CompleteCartRequest, CreatePaymentSessionRequest } from "@litecart/types";
 
 const CART_QUERY_KEY = ["cart"];
 
@@ -114,6 +114,24 @@ export function useCheckout() {
       setCart(null);
       queryClient.removeQueries({ queryKey: CART_QUERY_KEY });
       localStorage.removeItem("litecart-cart-id");
+    },
+  });
+}
+
+/**
+ * Hook to create payment session for Stripe checkout
+ */
+export function useCreatePaymentSession() {
+  const { cartId } = useStoreContext();
+
+  return useMutation({
+    mutationFn: async (data: CreatePaymentSessionRequest) => {
+      if (!cartId) throw new Error("No cart found");
+      const { payment_session } = await getApiClient().store.cart.createPaymentSession(
+        cartId,
+        data,
+      );
+      return payment_session;
     },
   });
 }

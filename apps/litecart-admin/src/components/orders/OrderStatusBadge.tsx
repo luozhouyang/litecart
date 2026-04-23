@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 import { Badge } from "@/components/ui/badge";
-import type { OrderStatus, FulfillmentStatus, PaymentStatus } from "@litecart/types";
+import type { OrderStatus, FulfillmentStatus, PaymentStatus, FulfillmentRecordStatus } from "@litecart/types";
 
 const badgeVariants = cva("", {
   variants: {
@@ -24,7 +24,7 @@ const badgeVariants = cva("", {
   },
 });
 
-type StatusType = OrderStatus | FulfillmentStatus | PaymentStatus;
+type StatusType = OrderStatus | FulfillmentStatus | PaymentStatus | FulfillmentRecordStatus;
 
 interface OrderStatusBadgeProps {
   status: StatusType;

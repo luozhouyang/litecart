@@ -49,7 +49,7 @@ export class AdminOrdersClient {
     if (query?.order) params.set("order", query.order);
     if (query?.direction) params.set("direction", query.direction);
 
-    const path = params.toString() ? `${this.basePath}?${params}` : this.basePath;
+    const path = params.toString() ? `${this.basePath}?${String(params)}` : this.basePath;
     return this.fetcher.get<OrderListResponse>(path, options, this.token, this.tokenType);
   }
 
@@ -110,6 +110,71 @@ export class AdminOrdersClient {
     return this.fetcher.post<{ order: OrderResponse }>(
       `${this.basePath}/${id}/refund`,
       data,
+      options,
+      this.token,
+      this.tokenType,
+    );
+  }
+
+  /**
+   * Get fulfillments for an order
+   */
+  async getFulfillments(
+    orderId: string,
+    options?: RequestOptions,
+  ): Promise<{
+    fulfillments: Array<{
+      id: string;
+      orderId: string;
+      status: string;
+      trackingNumber: string | null;
+      trackingUrl: string | null;
+      shippedAt: Date | null;
+      deliveredAt: Date | null;
+      createdAt: Date | null;
+    }>;
+  }> {
+    return this.fetcher.get<{
+      fulfillments: Array<{
+        id: string;
+        orderId: string;
+        status: string;
+        trackingNumber: string | null;
+        trackingUrl: string | null;
+        shippedAt: Date | null;
+        deliveredAt: Date | null;
+        createdAt: Date | null;
+      }>;
+    }>(`${this.basePath}/${orderId}/fulfillments`, options, this.token, this.tokenType);
+  }
+
+  /**
+   * Mark fulfillment as shipped
+   */
+  async markFulfillmentShipped(
+    fulfillmentId: string,
+    data?: { tracking_number?: string; tracking_url?: string },
+    options?: RequestOptions,
+  ): Promise<{ fulfillment: { id: string; status: string } }> {
+    return this.fetcher.post<{ fulfillment: { id: string; status: string } }>(
+      `${this.basePath}/fulfillments/${fulfillmentId}/shipped`,
+      data ?? {},
+      options,
+      this.token,
+      this.tokenType,
+    );
+  }
+
+  /**
+   * Mark fulfillment as delivered
+   */
+  async markFulfillmentDelivered(
+    fulfillmentId: string,
+    options?: RequestOptions,
+  ): Promise<{ fulfillment: { id: string; status: string } }> {
+    return this.fetcher.post<{ fulfillment: { id: string; status: string } }>(
+      `${this.basePath}/fulfillments/${fulfillmentId}/delivered`,
+      {},
       options,
       this.token,
       this.tokenType,

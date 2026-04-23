@@ -101,3 +101,73 @@ export function useRefundOrder(orderId: string) {
     },
   });
 }
+
+/**
+ * Hook to fetch order fulfillments
+ */
+export function useOrderFulfillments(orderId: string) {
+  const storeId = useCurrentStoreId();
+  const client = getApiClient();
+
+  return useQuery({
+    queryKey: ["orderFulfillments", orderId, storeId],
+    queryFn: () =>
+      client.admin.orders.getFulfillments(orderId, {
+        headers: storeId ? { "X-Store-Id": storeId } : undefined,
+      }),
+    enabled: !!storeId && !!orderId,
+  });
+}
+
+/**
+ * Hook to mark fulfillment as shipped
+ */
+export function useMarkFulfillmentShipped() {
+  const queryClient = useQueryClient();
+  const storeId = useCurrentStoreId();
+  const client = getApiClient();
+
+  return useMutation({
+    mutationFn: (data: {
+      fulfillmentId: string;
+      tracking_number?: string;
+      tracking_url?: string;
+    }) =>
+      client.admin.orders.markFulfillmentShipped(
+        data.fulfillmentId,
+        {
+          tracking_number: data.tracking_number,
+          tracking_url: data.tracking_url,
+        },
+        {
+          headers: storeId ? { "X-Store-Id": storeId } : undefined,
+        },
+      ),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["orderFulfillments"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["order"] });
+    },
+  });
+}
+
+/**
+ * Hook to mark fulfillment as delivered
+ */
+export function useMarkFulfillmentDelivered() {
+  const queryClient = useQueryClient();
+  const storeId = useCurrentStoreId();
+  const client = getApiClient();
+
+  return useMutation({
+    mutationFn: (fulfillmentId: string) =>
+      client.admin.orders.markFulfillmentDelivered(fulfillmentId, {
+        headers: storeId ? { "X-Store-Id": storeId } : undefined,
+      }),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["orderFulfillments"] });
+      void queryClient.invalidateQueries({ queryKey: ["orders"] });
+      void queryClient.invalidateQueries({ queryKey: ["order"] });
+    },
+  });
+}

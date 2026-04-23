@@ -9,6 +9,7 @@ import type {
   SelectShippingMethodRequest,
   CompleteCartRequest,
   OrderResponse,
+  CreatePaymentSessionRequest,
 } from "@litecart/types";
 
 /**
@@ -168,6 +169,26 @@ export class StoreCartClient {
   ): Promise<{ order: OrderResponse }> {
     return this.fetcher.post<{ order: OrderResponse }>(
       `${this.basePath}/${cartId}/complete`,
+      data,
+      options,
+      this.token,
+      this.tokenType,
+    );
+  }
+
+  /**
+   * Create payment session for Stripe checkout
+   * Returns Stripe checkout URL for redirect
+   */
+  async createPaymentSession(
+    cartId: string,
+    data: CreatePaymentSessionRequest,
+    options?: RequestOptions,
+  ): Promise<{ payment_session: { id: string; url: string; expires_at: Date | null } }> {
+    return this.fetcher.post<{
+      payment_session: { id: string; url: string; expires_at: Date | null };
+    }>(
+      `${this.basePath}/${cartId}/create-payment-session`,
       data,
       options,
       this.token,

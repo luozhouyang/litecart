@@ -8,6 +8,13 @@
       "when": 1776345413253,
       "tag": "0000_init_tables",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1776955320796,
+      "tag": "0001_add_payment",
+      "breakpoints": true
     }
   ]
 }

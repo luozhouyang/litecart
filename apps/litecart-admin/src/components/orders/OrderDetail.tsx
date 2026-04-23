@@ -1,10 +1,17 @@
 import { useParams, Link } from "@tanstack/react-router";
-import { useOrder, useUpdateOrder, useFulfillOrder } from "@/hooks";
+import {
+  useOrder,
+  useUpdateOrder,
+  useFulfillOrder,
+  useOrderFulfillments,
+  useMarkFulfillmentShipped,
+  useMarkFulfillmentDelivered,
+} from "@/hooks";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, Truck, CheckCircle } from "lucide-react";
+import { ArrowLeft, Truck, CheckCircle, Package, ExternalLink } from "lucide-react";
 import { OrderStatusBadge } from "./OrderStatusBadge";
 import {
   Select,
@@ -14,7 +21,18 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
-import type { OrderStatus } from "@litecart/types";
+import type { OrderStatus, FulfillmentRecordStatus } from "@litecart/types";
+
+interface Fulfillment {
+  id: string;
+  orderId: string;
+  status: FulfillmentRecordStatus;
+  trackingNumber: string | null;
+  trackingUrl: string | null;
+  shippedAt: Date | null;
+  deliveredAt: Date | null;
+  createdAt: Date | null;
+}
 import {
   Dialog,
   DialogContent,
@@ -29,14 +47,19 @@ import { Label } from "@/components/ui/label";
 export function OrderDetail() {
   const { orderId } = useParams({ from: "/orders/$orderId" });
   const { data, isLoading } = useOrder(orderId);
+  const { data: fulfillmentsData } = useOrderFulfillments(orderId);
   const updateOrder = useUpdateOrder(orderId);
   const fulfillOrder = useFulfillOrder(orderId);
+  const markShipped = useMarkFulfillmentShipped();
+  const markDelivered = useMarkFulfillmentDelivered();
 
   const [status, setStatus] = useState<OrderStatus | null>(null);
   const [fulfillDialogOpen, setFulfillDialogOpen] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
+  const [trackingUrl, setTrackingUrl] = useState("");
 
   const order = data?.order;
+  const fulfillments = (fulfillmentsData?.fulfillments ?? []) as Fulfillment[];
 
   // Initialize status from order data
   if (order && !status) {
@@ -51,9 +74,19 @@ export function OrderDetail() {
   const handleFulfill = async () => {
     await fulfillOrder.mutateAsync({
       trackingNumber: trackingNumber || undefined,
+      trackingUrl: trackingUrl || undefined,
     });
     setFulfillDialogOpen(false);
     setTrackingNumber("");
+    setTrackingUrl("");
+  };
+
+  const handleMarkShipped = async (fulfillmentId: string) => {
+    await markShipped.mutateAsync({ fulfillmentId });
+  };
+
+  const handleMarkDelivered = async (fulfillmentId: string) => {
+    await markDelivered.mutateAsync(fulfillmentId);
   };
 
   const formatCurrency = (amount: number, currencyCode: string) => {
@@ -103,7 +136,7 @@ export function OrderDetail() {
           <h1 className="text-2xl font-bold">Order #{order.displayId}</h1>
         </div>
         <div className="flex gap-2">
-          {order.fulfillmentStatus === "not_fulfilled" && (
+          {order.fulfillmentStatus !== "fulfilled" && order.fulfillmentStatus !== "returned" && (
             <Button onClick={() => setFulfillDialogOpen(true)}>
               <Truck className="mr-2 h-4 w-4" />
               Fulfill
@@ -227,6 +260,70 @@ export function OrderDetail() {
         </CardContent>
       </Card>
 
+      {/* Fulfillments */}
+      {fulfillments.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="h-5 w-5" />
+              Fulfillments ({fulfillments.length})
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {fulfillments.map((fulfillment) => (
+                <div key={fulfillment.id} className="p-4 border rounded space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">Fulfillment #{fulfillment.id}</span>
+                    <OrderStatusBadge status={fulfillment.status} />
+                  </div>
+
+                  {fulfillment.trackingNumber && (
+                    <div className="flex items-center gap-2 text-sm">
+                      <span className="text-muted-foreground">Tracking:</span>
+                      <span>{fulfillment.trackingNumber}</span>
+                      {fulfillment.trackingUrl && (
+                        <a
+                          href={fulfillment.trackingUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          <ExternalLink className="h-3 w-3" />
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 pt-2">
+                    {fulfillment.status === "not_fulfilled" && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleMarkShipped(fulfillment.id)}
+                        disabled={markShipped.isPending}
+                      >
+                        <Truck className="mr-1 h-3 w-3" />
+                        Mark Shipped
+                      </Button>
+                    )}
+                    {fulfillment.status === "shipped" && (
+                      <Button
+                        size="sm"
+                        onClick={() => handleMarkDelivered(fulfillment.id)}
+                        disabled={markDelivered.isPending}
+                      >
+                        <CheckCircle className="mr-1 h-3 w-3" />
+                        Mark Delivered
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Fulfill Dialog */}
       <Dialog open={fulfillDialogOpen} onOpenChange={setFulfillDialogOpen}>
         <DialogContent>
@@ -244,6 +341,15 @@ export function OrderDetail() {
                 value={trackingNumber}
                 onChange={(e) => setTrackingNumber(e.target.value)}
                 placeholder="Enter tracking number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="trackingUrl">Tracking URL (optional)</Label>
+              <Input
+                id="trackingUrl"
+                value={trackingUrl}
+                onChange={(e) => setTrackingUrl(e.target.value)}
+                placeholder="https://tracking.example.com/..."
               />
             </div>
           </div>

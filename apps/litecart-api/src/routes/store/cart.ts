@@ -15,8 +15,10 @@ import {
   setShippingAddressSchema,
   selectShippingMethodSchema,
   completeCartSchema,
+  createPaymentSessionSchema,
 } from "@litecart/types";
 import { storefrontJwtMiddleware } from "../../middleware";
+import { PaymentProviderFactory } from "../../lib/payment";
 import type { HonoVariables } from "../../types/bindings";
 
 const app = new Hono<{
@@ -317,5 +319,97 @@ app.post("/:id/complete", zValidator("json", completeCartSchema), async (c) => {
 
   return c.json({ order });
 });
+
+// POST /api/store/cart/:id/create-payment-session - Create payment session for Stripe checkout
+app.post(
+  "/:id/create-payment-session",
+  zValidator("json", createPaymentSessionSchema),
+  async (c) => {
+    const storeDo = c.get("storeDo");
+    if (!storeDo) {
+      return c.json(
+        {
+          error: {
+            code: "STORE_NOT_SET",
+            message: "Store context not set",
+          },
+        },
+        400,
+      );
+    }
+
+    const cartId = c.req.param("id");
+    const data = c.req.valid("json");
+
+    const cartService = await storeDo.getCartService();
+    const cart = await cartService.getById(cartId);
+
+    if (!cart) {
+      return c.json({ error: { code: "NOT_FOUND", message: "Cart not found" } }, 404);
+    }
+
+    if (cart.completedAt) {
+      return c.json(
+        { error: { code: "ALREADY_COMPLETED", message: "Cart already completed" } },
+        400,
+      );
+    }
+
+    // Calculate totals
+    const totals = await cartService.calculateTotals(cartId);
+    const amount = totals?.total || 0;
+
+    if (amount <= 0) {
+      return c.json(
+        { error: { code: "INVALID_AMOUNT", message: "Cart total must be greater than 0" } },
+        400,
+      );
+    }
+
+    // Get provider ID from request or default to stripe
+    const providerId = data.provider_id || "stripe";
+
+    // Create payment provider instance
+    const provider = PaymentProviderFactory.createProvider(providerId, null, {
+      STRIPE_API_KEY: c.env.STRIPE_API_KEY,
+      STRIPE_WEBHOOK_SECRET: c.env.STRIPE_WEBHOOK_SECRET,
+    });
+
+    // Build URLs
+    const storefrontUrl = c.env.STOREFRONT_URL || "http://localhost:5173";
+    const successUrl = `${storefrontUrl}/payment/success?session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${storefrontUrl}/payment/cancel?cart_id=${cartId}`;
+
+    // Create payment session with provider
+    const session = await provider.createPaymentSession({
+      cartId,
+      amount,
+      currencyCode: cart.currencyCode,
+      email: data.email || cart.email || "guest@example.com",
+      successUrl,
+      cancelUrl,
+    });
+
+    // Store payment session in DO
+    const paymentService = await storeDo.getPaymentService();
+    await paymentService.createSession({
+      cartId,
+      providerId,
+      sessionId: session.sessionId,
+      paymentIntentId: session.paymentIntentId,
+      amount,
+      currencyCode: cart.currencyCode,
+      expiresAt: session.expiresAt,
+    });
+
+    return c.json({
+      payment_session: {
+        id: session.sessionId,
+        url: session.paymentUrl,
+        expires_at: session.expiresAt,
+      },
+    });
+  },
+);
 
 export default app;

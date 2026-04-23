@@ -172,3 +172,58 @@ export const orderShippingMethods = sqliteTable(
     index("order_shipping_methods_shipping_option_id_idx").on(table.shippingOptionId),
   ],
 );
+
+/**
+ * Order Returns table
+ * Tracks return requests for orders
+ */
+export const orderReturns = sqliteTable(
+  "order_returns",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => "ret_" + uuidv7()),
+    orderId: text("order_id")
+      .notNull()
+      .references(() => orders.id),
+    fulfillmentId: text("fulfillment_id").references(() => orderFulfillments.id),
+    status: text("status", {
+      enum: ["pending", "received", "processed", "canceled"],
+    })
+      .default("pending")
+      .notNull(),
+    reason: text("reason"),
+    receivedAt: integer("received_at", { mode: "timestamp" }),
+    createdAt: integer("created_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).$defaultFn(() => new Date()),
+  },
+  (table) => [
+    index("order_returns_order_id_idx").on(table.orderId),
+    index("order_returns_fulfillment_id_idx").on(table.fulfillmentId),
+    index("order_returns_status_idx").on(table.status),
+  ],
+);
+
+/**
+ * Return Items table
+ * Tracks individual items in a return
+ */
+export const returnItems = sqliteTable(
+  "return_items",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => "ritem_" + uuidv7()),
+    returnId: text("return_id")
+      .notNull()
+      .references(() => orderReturns.id, { onDelete: "cascade" }),
+    orderItemId: text("order_item_id")
+      .notNull()
+      .references(() => orderItems.id),
+    quantity: integer("quantity").notNull(),
+  },
+  (table) => [
+    index("return_items_return_id_idx").on(table.returnId),
+    index("return_items_order_item_id_idx").on(table.orderItemId),
+  ],
+);

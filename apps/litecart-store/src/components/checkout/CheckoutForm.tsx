@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useCheckout } from "@/hooks/useCart";
+import { useCreatePaymentSession, useCheckout } from "@/hooks/useCart";
 import { useStoreContext } from "@/lib/store-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { formatPrice } from "@/lib/utils";
-import { Loader2 } from "lucide-react";
+import { Loader2, CreditCard } from "lucide-react";
 import { Link, useNavigate } from "@tanstack/react-router";
 
 interface CheckoutFormProps {
@@ -13,6 +13,7 @@ interface CheckoutFormProps {
 
 export function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const { cart, createCart } = useStoreContext();
+  const createPaymentSession = useCreatePaymentSession();
   const checkoutMutation = useCheckout();
   const navigate = useNavigate();
 
@@ -30,8 +31,26 @@ export function CheckoutForm({ onSuccess }: CheckoutFormProps) {
     );
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Handle payment with Stripe
+  const handlePayWithStripe = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) return;
+
+    createPaymentSession.mutate(
+      { email, provider_id: "stripe" },
+      {
+        onSuccess: (data) => {
+          // Redirect to Stripe checkout
+          if (data.url) {
+            window.location.href = data.url;
+          }
+        },
+      },
+    );
+  };
+
+  // Handle manual checkout (create order without payment)
+  const handleManualCheckout = async () => {
     if (!email) return;
 
     checkoutMutation.mutate(
@@ -48,7 +67,7 @@ export function CheckoutForm({ onSuccess }: CheckoutFormProps) {
   const total = cart.total ?? cart.subtotal ?? 0;
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+    <form onSubmit={handlePayWithStripe} className="flex flex-col gap-6">
       {/* Email */}
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="text-sm font-medium">
@@ -80,22 +99,47 @@ export function CheckoutForm({ onSuccess }: CheckoutFormProps) {
         </div>
       </div>
 
-      {/* Place Order Button */}
-      <Button
-        type="submit"
-        size="lg"
-        className="w-full"
-        disabled={checkoutMutation.isPending || !email}
-      >
-        {checkoutMutation.isPending ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin mr-2" />
-            Processing...
-          </>
-        ) : (
-          `Place Order - ${formatPrice(total, cart.currencyCode)}`
-        )}
-      </Button>
+      {/* Payment Options */}
+      <div className="flex flex-col gap-3">
+        {/* Pay with Stripe Button */}
+        <Button
+          type="submit"
+          size="lg"
+          className="w-full"
+          disabled={createPaymentSession.isPending || !email}
+        >
+          {createPaymentSession.isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              Processing...
+            </>
+          ) : (
+            <>
+              <CreditCard className="h-4 w-4 mr-2" />
+              Pay with Stripe - {formatPrice(total, cart.currencyCode)}
+            </>
+          )}
+        </Button>
+
+        {/* Manual Checkout (for testing) */}
+        <Button
+          type="button"
+          variant="outline"
+          size="lg"
+          className="w-full"
+          disabled={checkoutMutation.isPending || !email}
+          onClick={handleManualCheckout}
+        >
+          {checkoutMutation.isPending ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+              Processing...
+            </>
+          ) : (
+            "Place Order (Manual)"
+          )}
+        </Button>
+      </div>
 
       {/* Back to cart */}
       <Link to="/cart" className="text-sm text-muted-foreground hover:text-foreground text-center">

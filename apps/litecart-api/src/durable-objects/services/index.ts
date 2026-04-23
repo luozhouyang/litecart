@@ -8,3 +8,5 @@ export { CategoryService } from "./category-service";
 export { CollectionService } from "./collection-service";
 export { OrderService } from "./order-service";
 export { CartService } from "./cart-service";
+export { PaymentService } from "./payment-service";
+export { FulfillmentService } from "./fulfillment-service";

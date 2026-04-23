@@ -26,6 +26,9 @@ import {
   orderItems,
   orderFulfillments,
   fulfillmentItems,
+  orderReturns,
+  returnItems,
+  paymentSessions,
   transactions,
   shippingOptions,
   shippingProviders,
@@ -199,6 +202,8 @@ export const ordersRelations = relations(orders, ({ one, many }) => ({
   items: many(orderItems),
   fulfillments: many(orderFulfillments),
   transactions: many(transactions),
+  paymentSessions: many(paymentSessions),
+  returns: many(orderReturns),
 }));
 
 export const orderItemsRelations = relations(orderItems, ({ one }) => ({
@@ -227,9 +232,45 @@ export const fulfillmentItemsRelations = relations(fulfillmentItems, ({ one }) =
   }),
 }));
 
+// Return relations
+export const orderReturnsRelations = relations(orderReturns, ({ one, many }) => ({
+  order: one(orders, {
+    fields: [orderReturns.orderId],
+    references: [orders.id],
+  }),
+  fulfillment: one(orderFulfillments, {
+    fields: [orderReturns.fulfillmentId],
+    references: [orderFulfillments.id],
+  }),
+  items: many(returnItems),
+}));
+
+export const returnItemsRelations = relations(returnItems, ({ one }) => ({
+  return: one(orderReturns, {
+    fields: [returnItems.returnId],
+    references: [orderReturns.id],
+  }),
+  orderItem: one(orderItems, {
+    fields: [returnItems.orderItemId],
+    references: [orderItems.id],
+  }),
+}));
+
 export const transactionsRelations = relations(transactions, ({ one }) => ({
   order: one(orders, {
     fields: [transactions.orderId],
+    references: [orders.id],
+  }),
+  paymentSession: one(paymentSessions, {
+    fields: [transactions.paymentSessionId],
+    references: [paymentSessions.id],
+  }),
+}));
+
+// Payment relations
+export const paymentSessionsRelations = relations(paymentSessions, ({ one }) => ({
+  order: one(orders, {
+    fields: [paymentSessions.orderId],
     references: [orders.id],
   }),
 }));

@@ -22,6 +22,15 @@ export const fulfillmentStatusSchema = z.enum([
 ]);
 export type FulfillmentStatus = z.infer<typeof fulfillmentStatusSchema>;
 
+// Fulfillment record status (for individual fulfillment records)
+export const fulfillmentRecordStatusSchema = z.enum([
+  "not_fulfilled",
+  "shipped",
+  "delivered",
+  "canceled",
+]);
+export type FulfillmentRecordStatus = z.infer<typeof fulfillmentRecordStatusSchema>;
+
 export const paymentStatusSchema = z.enum([
   "not_paid",
   "paid",

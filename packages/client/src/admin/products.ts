@@ -47,7 +47,7 @@ export class AdminProductsClient {
     if (query?.order) params.set("order", query.order);
     if (query?.direction) params.set("direction", query.direction);
 
-    const path = params.toString() ? `${this.basePath}?${params}` : this.basePath;
+    const path = params.toString() ? `${this.basePath}?${String(params)}` : this.basePath;
     return this.fetcher.get<ProductListResponse>(path, options, this.token, this.tokenType);
   }
 

@@ -63,6 +63,10 @@
   "vars": {
     "BETTER_AUTH_SECRET": "", // Set via wrangler secret or .dev.vars
     "BETTER_AUTH_URL": "http://localhost:8787",
+    "STOREFRONT_URL": "http://localhost:5173", // Storefront URL for payment redirects
+    "DEFAULT_STORE_ID": "", // Default store ID for webhook processing
+    "STRIPE_API_KEY": "", // Set via wrangler secret or .dev.vars
+    "STRIPE_WEBHOOK_SECRET": "", // Set via wrangler secret or .dev.vars
   },
   // Development vars file (for local dev)
   // Create .dev.vars with secrets like:

@@ -23,6 +23,7 @@
     "hono": "catalog:",
     "jose": "catalog:",
     "nanoid": "catalog:",
+    "stripe": "catalog:",
     "uuidv7": "catalog:",
     "zod": "catalog:"
   },

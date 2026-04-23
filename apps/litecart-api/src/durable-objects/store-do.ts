@@ -16,7 +16,9 @@ import {
   CartService,
   CategoryService,
   CollectionService,
+  FulfillmentService,
   OrderService,
+  PaymentService,
   ProductService,
 } from "./services";
 
@@ -35,6 +37,8 @@ export class StoreDurableObject extends DurableObject<CloudflareBindings> {
   private collectionService: CollectionService | null = null;
   private orderService: OrderService | null = null;
   private cartService: CartService | null = null;
+  private paymentService: PaymentService | null = null;
+  private fulfillmentService: FulfillmentService | null = null;
 
   constructor(ctx: DurableObjectState, env: CloudflareBindings) {
     super(ctx, env);
@@ -121,6 +125,26 @@ export class StoreDurableObject extends DurableObject<CloudflareBindings> {
       this.cartService = new CartService(this.db);
     }
     return this.cartService;
+  }
+
+  /**
+   * Get Payment Service instance for payment operations
+   */
+  async getPaymentService(): Promise<PaymentService> {
+    if (!this.paymentService) {
+      this.paymentService = new PaymentService(this.db);
+    }
+    return this.paymentService;
+  }
+
+  /**
+   * Get Fulfillment Service instance for fulfillment and return operations
+   */
+  async getFulfillmentService(): Promise<FulfillmentService> {
+    if (!this.fulfillmentService) {
+      this.fulfillmentService = new FulfillmentService(this.db);
+    }
+    return this.fulfillmentService;
   }
 
   // ====================
